@@ -29,12 +29,12 @@ function operate(a, b, operator) {
     }
 }
 
-function resetCalculator(lastResult) {
+function resetCalculator(lastResult, lastOperation) {
     display.textConetent = lastResult;
     a = lastResult;
     lastNum = lastResult;
     lastCmd = 'N/A';
-    currOperator = 'N/A';
+    currOperator = lastOperation;
     numString = "";
 }
 
@@ -62,10 +62,17 @@ for(let i = 0; i < buttons.length; i++) {
 for (let i = 0; i < buttons.length; i++) {
     if (operators.includes(buttons[i].id)) {
         buttons[i].addEventListener('click', () => {
-            a = lastNum
-            numString = "";
-            currOperator = buttons[i].id;
-            lastCmd = buttons[i].id;
+            if (currOperator == 'N/A') {
+                a = lastNum
+                numString = "";
+                currOperator = buttons[i].id;
+                lastCmd = buttons[i].id;
+            } else {
+                //chaining operations
+                let result = operate(a, lastNum, currOperator)
+                display.textContent = result
+                resetCalculator(parseFloat(result), buttons[i].id);
+            }
         })
     } else if (buttons[i].id == '=') {
         buttons[i].addEventListener('click', () => {
@@ -76,14 +83,14 @@ for (let i = 0; i < buttons.length; i++) {
             } else {
                 let result = operate(a, lastNum, currOperator)
                 display.textContent = result
-                resetCalculator(parseFloat(result));
+                resetCalculator(parseFloat(result), 'N/A');
             }
         })
     } else if (buttons[i].id == 'AC') {
         display.textContent = '0';
         buttons[i].addEventListener('click', () => {
             display.textContent = 0;
-            resetCalculator(0);
+            resetCalculator(0, 'N/A');
         })
     }
 }
