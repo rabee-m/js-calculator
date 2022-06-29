@@ -26,6 +26,7 @@ let a = 0;
 let b = 0;
 let lastCmd = 'N/A';
 let currOperator = 'N/A';
+let numString = "";
 const operators = ['+', '-', '*', '/'];
 
 function resetCalculator(lastResult) {
@@ -35,6 +36,7 @@ function resetCalculator(lastResult) {
     b = 0;
     lastCmd = 'N/A';
     currOperator = 'N/A';
+    numString = "";
 }
 
 const buttons = document.querySelectorAll('button')
@@ -42,12 +44,15 @@ const buttons = document.querySelectorAll('button')
 for(let i = 0; i < buttons.length; i++) {
     if (!isNaN(buttons[i].id)) {
         buttons[i].addEventListener('click', () => {
-            display.textContent = buttons[i].id
-            if (operators.includes(lastCmd)) {
-                b = parseFloat(buttons[i].id)
+            if (currOperator != 'N/A') {
+                numString += buttons[i].id;
+                display.textContent = numString;
+                lastNum = parseFloat(numString)
                 lastCmd = buttons[i].id;
             } else {
-                lastNum = parseFloat(buttons[i].id)
+                numString += buttons[i].id;
+                display.textContent = numString;
+                lastNum = parseFloat(numString);
                 lastCmd = buttons[i].id;
             }
         })
@@ -59,12 +64,13 @@ for (let i = 0; i < buttons.length; i++) {
     if (operators.includes(buttons[i].id)) {
         buttons[i].addEventListener('click', () => {
             a = lastNum
+            numString = "";
             currOperator = buttons[i].id;
             lastCmd = buttons[i].id;
         })
     } else if (buttons[i].id == '=') {
         buttons[i].addEventListener('click', () => {
-            let result = operate(a, b, currOperator)
+            let result = operate(a, lastNum, currOperator)
             display.textContent = result
             resetCalculator(parseFloat(result));
         })
