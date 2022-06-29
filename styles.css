@@ -27,6 +27,7 @@ body {
     display: flex;
     justify-content: flex-end;
     border-bottom: solid;
+    background-color: ghostwhite;
 }
 
 button {
