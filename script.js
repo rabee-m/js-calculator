@@ -1,6 +1,14 @@
 //Html elements
 const display = document.querySelector(".display")
+const buttons = document.querySelectorAll('button')
 
+//variables used for computational logic of calculator
+let lastNum = 0;
+let a = 0;
+let lastCmd = 'N/A';
+let currOperator = 'N/A';
+let numString = "";
+const operators = ['+', '-', '*', '/'];
 
 //Functions to handle basic operations
 function add (a, b) {return a + b;}
@@ -21,25 +29,16 @@ function operate(a, b, operator) {
     }
 }
 
-let lastNum = 0;
-let a = 0;
-let b = 0;
-let lastCmd = 'N/A';
-let currOperator = 'N/A';
-let numString = "";
-const operators = ['+', '-', '*', '/'];
-
 function resetCalculator(lastResult) {
     display.textConetent = lastResult;
     a = lastResult;
     lastNum = lastResult;
-    b = 0;
     lastCmd = 'N/A';
     currOperator = 'N/A';
     numString = "";
 }
 
-const buttons = document.querySelectorAll('button')
+
 //loop through buttons, and add event listenr for numeric buttons
 for(let i = 0; i < buttons.length; i++) {
     if (!isNaN(buttons[i].id)) {
@@ -70,9 +69,15 @@ for (let i = 0; i < buttons.length; i++) {
         })
     } else if (buttons[i].id == '=') {
         buttons[i].addEventListener('click', () => {
-            let result = operate(a, lastNum, currOperator)
-            display.textContent = result
-            resetCalculator(parseFloat(result));
+            if (currOperator == '/' && lastNum == 0) {
+                //handle division by zero error
+                display.textContent = 'ERROR';
+                resetCalculator(0);
+            } else {
+                let result = operate(a, lastNum, currOperator)
+                display.textContent = result
+                resetCalculator(parseFloat(result));
+            }
         })
     } else if (buttons[i].id == 'AC') {
         display.textContent = '0';
