@@ -1,3 +1,7 @@
+//Html elements
+const display = document.querySelector(".display")
+
+
 //Functions to handle basic operations
 function add (a, b) {return a + b;}
 function subtract(a, b) {return a - b;}
@@ -16,3 +20,69 @@ function operate(a, b, operator) {
             return divide(a, b);
     }
 }
+
+let lastNum = 0;
+let a = 0;
+let b = 0;
+let lastCmd = 'N/A';
+let currOperator = 'N/A';
+const operators = ['+', '-', '*', '/'];
+
+function resetCalculator(lastResult) {
+    display.textConetent = lastResult;
+    a = lastResult;
+    lastNum = lastResult;
+    b = 0;
+    lastCmd = 'N/A';
+    currOperator = 'N/A';
+}
+
+const buttons = document.querySelectorAll('button')
+//loop through buttons, and add event listenr for numeric buttons
+for(let i = 0; i < buttons.length; i++) {
+    if (!isNaN(buttons[i].id)) {
+        buttons[i].addEventListener('click', () => {
+            display.textContent = buttons[i].id
+            if (operators.includes(lastCmd)) {
+                b = parseFloat(buttons[i].id)
+                lastCmd = buttons[i].id;
+            } else {
+                lastNum = parseFloat(buttons[i].id)
+                lastCmd = buttons[i].id;
+            }
+        })
+    }
+}
+
+//add event listener to operators and symbols
+for (let i = 0; i < buttons.length; i++) {
+    if (operators.includes(buttons[i].id)) {
+        buttons[i].addEventListener('click', () => {
+            a = lastNum
+            currOperator = buttons[i].id;
+            lastCmd = buttons[i].id;
+        })
+    } else if (buttons[i].id == '=') {
+        buttons[i].addEventListener('click', () => {
+            let result = operate(a, b, currOperator)
+            display.textContent = result
+            resetCalculator(parseFloat(result));
+        })
+    } else if (buttons[i].id == 'AC') {
+        display.textContent = '0';
+        buttons[i].addEventListener('click', () => {
+            display.textContent = 0;
+            resetCalculator(0);
+        })
+    }
+}
+
+//when a user presses an operator store lastNum into a
+// if lastCmd is operator, then store num into b
+// when '=' pressed call operate function
+//then search for next number and operate on equal sign
+
+
+//have value display value stored
+// when operate is clicked, anticipate next     
+
